@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>firesites.tech Client Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-bg': '#0A0A0A',
+              'brand-primary': '#FF4500', // Bright Orange
+              'brand-secondary': '#DC2626', // Fiery Red
+              'brand-highlight': '#FACC15', // Bright Yellow
+              'brand-text': '#E5E5E5',
+            },
+            fontFamily: {
+              heading: ['Poppins', 'sans-serif'],
+              body: ['Inter', 'sans-serif'],
+            },
+            animation: {
+              'fire-flicker': 'fire-flicker 2s ease-in-out infinite alternate',
+            },
+            keyframes: {
+              'fire-flicker': {
+                '0%': {
+                  transform: 'scale(1) rotate(-2deg)',
+                  opacity: 1,
+                },
+                '100%': {
+                  transform: 'scale(1.15) rotate(2deg)',
+                  opacity: 0.9,
+                },
+              },
+            },
+          }
+        }
+      }
+    </script>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.1",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-markdown": "https://esm.sh/react-markdown@9",
+    "remark-gfm": "https://esm.sh/remark-gfm@4"
+  }
+}
+</script>
+</head>
+<body class="bg-brand-bg">
+<div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
