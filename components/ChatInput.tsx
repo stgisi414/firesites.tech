@@ -32,7 +32,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading, 
         onKeyDown={handleKeyDown}
         placeholder="Ask anything about FIRE..."
         rows={1}
-        className="w-full resize-none rounded-lg bg-secondary-dark text-text-light placeholder:text-text-subtle-dark border-0 focus:ring-2 focus:ring-accent-orange pr-28 p-4"
+        className="w-full resize-none rounded-lg bg-secondary-dark text-yellow-100 placeholder:text-subtle-dark border-0 focus:ring-2 focus:ring-accent-orange pr-28 p-4"
         disabled={isLoading}
       />
       <div className="absolute bottom-2 right-2 flex items-center gap-2">

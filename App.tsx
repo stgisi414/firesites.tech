@@ -12,6 +12,9 @@ import { Calculators } from './components/Calculators';
 import { LandingPage } from './components/LandingPage';
 import { Services } from './components/Services';
 import { CaseStudies } from './components/CaseStudies';
+import { About } from './components/About';
+import { Contact } from './components/Contact';
+import { MainHeader } from './components/MainHeader';
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -226,24 +229,30 @@ const App: React.FC = () => {
   if (appState === 'landing') {
     const hasExistingChat = !!localStorage.getItem('intakeData');
     return (
-      <LandingPage 
+      <LandingPage
+        appState={appState}
         onStartProject={() => setAppState('intake')}
         hasExistingChat={hasExistingChat}
         onGoToChat={handleGoToChat}
         onGoToServices={() => setAppState('services')}
         onGoToPricing={() => setAppState('pricing')}
         onGoToCaseStudies={() => setAppState('caseStudies')}
+        onGoToAbout={() => setAppState('about')}
+        onGoToContact={() => setAppState('contact')}
       />
     );
   }
 
   if (appState === 'services') {
     return (
-      <Services 
+      <Services
+        appState={appState}
         onStartProject={() => setAppState('intake')}
         onLogoClick={() => setAppState('landing')}
         onGoToPricing={() => setAppState('pricing')}
         onGoToCaseStudies={() => setAppState('caseStudies')}
+        onGoToAbout={() => setAppState('about')}
+        onGoToContact={() => setAppState('contact')}
       />
     );
   }
@@ -251,24 +260,58 @@ const App: React.FC = () => {
   if (appState === 'pricing') {
     return (
       <Pricing
+        appState={appState}
         onStartProject={() => setAppState('intake')}
         onLogoClick={() => setAppState('landing')}
         onGoToServices={() => setAppState('services')}
         onGoToCaseStudies={() => setAppState('caseStudies')}
+        onGoToAbout={() => setAppState('about')}
+        onGoToContact={() => setAppState('contact')}
       />
     );
   }
 
   if (appState === 'caseStudies') {
-      return (
-        <CaseStudies
-          onStartProject={() => setAppState('intake')}
-          onLogoClick={() => setAppState('landing')}
-          onGoToServices={() => setAppState('services')}
-          onGoToPricing={() => setAppState('pricing')}
-        />
-      );
-    }
+    return (
+      <CaseStudies
+        appState={appState}
+        onStartProject={() => setAppState('intake')}
+        onLogoClick={() => setAppState('landing')}
+        onGoToServices={() => setAppState('services')}
+        onGoToPricing={() => setAppState('pricing')}
+        onGoToAbout={() => setAppState('about')}
+        onGoToContact={() => setAppState('contact')}
+      />
+    );
+  }
+
+  if (appState === 'about') {
+    return (
+      <About
+        appState={appState}
+        onStartProject={() => setAppState('intake')}
+        onLogoClick={() => setAppState('landing')}
+        onGoToServices={() => setAppState('services')}
+        onGoToPricing={() => setAppState('pricing')}
+        onGoToCaseStudies={() => setAppState('caseStudies')}
+        onGoToContact={() => setAppState('contact')}
+      />
+    );
+  }
+
+  if (appState === 'contact') {
+    return (
+      <Contact
+        appState={appState}
+        onStartProject={() => setAppState('intake')}
+        onLogoClick={() => setAppState('landing')}
+        onGoToServices={() => setAppState('services')}
+        onGoToPricing={() => setAppState('pricing')}
+        onGoToCaseStudies={() => setAppState('caseStudies')}
+        onGoToAbout={() => setAppState('about')}
+      />
+    )
+  }
 
   // 2. RENDER INTAKE FORM
   if (appState === 'intake') {
@@ -345,6 +388,22 @@ const App: React.FC = () => {
           >
             <span className="material-symbols-outlined text-white">auto_stories</span>
             <p className="text-white text-sm font-medium leading-normal">Case Studies</p>
+          </button>
+
+          <button 
+            onClick={() => setAppState('about')}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${appState === 'about' ? 'bg-secondary-dark' : 'hover:bg-secondary-dark'}`}
+          >
+            <span className="material-symbols-outlined text-white">info</span>
+            <p className="text-white text-sm font-medium leading-normal">About</p>
+          </button>
+
+          <button 
+            onClick={() => setAppState('contact')}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${appState === 'contact' ? 'bg-secondary-dark' : 'hover:bg-secondary-dark'}`}
+          >
+            <span className="material-symbols-outlined text-white">mail</span>
+            <p className="text-white text-sm font-medium leading-normal">Contact</p>
           </button>
           
           <a className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary-dark transition-colors" href="#">

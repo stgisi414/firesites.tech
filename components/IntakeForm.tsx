@@ -105,7 +105,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ onSubmit }) => {
           <label className="flex flex-col w-full">
             <p className="text-white text-base font-medium leading-normal pb-2">Full Name</p>
             <input 
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:ring-0 h-12 p-4 text-base font-normal leading-normal" 
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:ring-0 h-12 p-4 text-dark font-normal leading-normal" 
               placeholder="Enter your full name" 
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -125,7 +125,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ onSubmit }) => {
           <label className="flex flex-col w-full">
             <p className="text-white text-base font-medium leading-normal pb-2">Industry</p>
             <select 
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:ring-0 h-12 px-4 text-base font-normal leading-normal"
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:ring-0 h-12 px-4 text-dark font-normal leading-normal"
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
             >
@@ -140,7 +140,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ onSubmit }) => {
           <label className="flex flex-col w-full">
             <p className="text-white text-base font-medium leading-normal pb-2">Years of Experience</p>
             <select 
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:ring-0 h-12 px-4 text-base font-normal leading-normal"
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg focus:ring-0 h-12 px-4 text-dark font-normal leading-normal"
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
             >

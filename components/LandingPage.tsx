@@ -1,21 +1,29 @@
 import React from 'react';
+import type { AppState } from '../types';
+import { MainHeader } from './MainHeader';
 
 interface LandingPageProps {
+  appState: AppState;
   onStartProject: () => void;
   hasExistingChat: boolean;
   onGoToChat: () => void;
   onGoToServices: () => void;
   onGoToPricing: () => void;
   onGoToCaseStudies: () => void;
+  onGoToAbout: () => void;
+  onGoToContact: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ 
+  appState,
   onStartProject, 
   hasExistingChat,
   onGoToChat,
   onGoToServices,
   onGoToPricing,
-  onGoToCaseStudies
+  onGoToCaseStudies,
+  onGoToAbout,
+  onGoToContact
 }) => {
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden text-white bg-background-dark font-display antialiased">
@@ -25,28 +33,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </div>
       
       <div className="relative z-10 flex h-full grow flex-col">
-        {/* Header */}
-        <header className="w-full px-4 md:px-10 lg:px-20 py-5">
-          <div className="mx-auto flex max-w-7xl items-center justify-between">
-            <button className="flex items-center gap-3 text-white">
-              <img src="/logo.jpg" alt="FIRE Solutions Logo" className="h-20 w-20 rounded-full border border-4 border-orange-400 " />
-              <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em]">FIRE Solutions</h2>
-            </button>
-            <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
-              <button onClick={onGoToServices} className="hover:text-primary transition-colors">Services</button>
-              <button onClick={onGoToPricing} className="hover:text-primary transition-colors">Pricing</button>
-              <button onClick={onGoToCaseStudies} className="hover:text-primary transition-colors">Case Studies</button> {/* 👈 ADD */}
-              <a className="hover:text-primary transition-colors" href="#">About</a>
-              <a className="hover:text-primary transition-colors" href="#">Contact</a>
-            </nav>
-            <button 
-              onClick={onStartProject}
-              className="flex items-center justify-center h-10 px-6 text-sm font-bold text-white bg-primary rounded-lg hover:bg-orange-600 transition-colors"
-            >
-              <span>Start Project</span>
-            </button>
-          </div>
-        </header>
+        <MainHeader
+          appState={appState}
+          onLogoClick={onGoToChat} // Or onLogoClick={() => {}} if you want it to do nothing on landing
+          onGoToServices={onGoToServices}
+          onGoToPricing={onGoToPricing}
+          onGoToCaseStudies={onGoToCaseStudies}
+          onGoToAbout={onGoToAbout}
+          onGoToContact={onGoToContact}
+          onStartProject={onStartProject}
+        />
 
         {/* Main Content */}
         <main className="flex-1">

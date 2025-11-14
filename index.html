@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -26,14 +27,22 @@
               // New colors from design
               "primary": "#ff4400",
               "background-light": "#f8f6f5",
-              "background-dark": "#121212", // 👈 Updated
+              "background-dark": "#121212",
               "secondary-dark": "#2C2C2C",
-              "surface-dark": "#1A1A1A", // 👈 Added
+              "surface-dark": "#1A1A1A",
               "ai-bubble-dark": "#3D3D3D",
-              "text-light": "#EAEAEA",
               "text-subtle-dark": "#888888",
               "accent-orange": "#FF8C00",
-              "accent-yellow": "#FFD700"
+              "accent-yellow": "#FFD700",
+
+              "text-light": "#1A1A1A",
+              "text-dark": "#F5F5F5",
+              "field-light": "#FFFFFF",
+              "field-dark": "#2C2C2C", // Using your existing `secondary-dark`
+              "border-light": "#E0E0E0",
+              "border-dark": "#444444",
+              "placeholder-light": "#9E9E9E",
+              "placeholder-dark": "#BDBDBD"
             },
             fontFamily: {
               heading: ['Poppins', 'sans-serif'],
@@ -81,7 +90,7 @@
       }
       .form-input {
         background-color: var(--form-input-bg);
-        color: var(--form-input-text);
+        color: #000000 !important;
         border: 1px solid transparent;
         transition: border-color 0.2s ease-in-out;
       }
@@ -103,6 +112,18 @@
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
+      }
+      select.form-select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23BDBDBD'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.5em 1.5em;
+      }
+      html.light select.form-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239E9E9E'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
       }
       .material-symbols-outlined {
         font-variation-settings:

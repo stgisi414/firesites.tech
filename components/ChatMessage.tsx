@@ -199,7 +199,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming }
           {/* <p className="text-text-subtle-dark text-xs">9:41 AM</p> */}
         </div>
         
-        <div className={`max-w-xl rounded-lg px-4 py-3 ${isBot ? 'bg-ai-bubble-dark text-text-light' : 'bg-gradient-to-r from-accent-orange to-accent-yellow text-black'}`}>
+        <div className={`max-w-xl rounded-lg px-4 py-3 ${isBot ? 'bg-ai-bubble-dark text-orange-100' : 'bg-gradient-to-r from-accent-orange to-accent-yellow text-black'}`}>
           <div className="prose prose-invert prose-sm max-w-none text-inherit">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
