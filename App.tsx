@@ -304,11 +304,8 @@ const App: React.FC = () => {
         
         {/* Make the logo a button to go to landing page */}
         <button onClick={() => setAppState('landing')} className="flex items-center gap-4 text-white">
-          <div className="text-primary text-2xl">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-              <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z" fill="currentColor"></path>
-            </svg>
-          </div>
+          {/* ⬇️ FIXED THIS BLOCK ⬇️ */}
+          <img src="/logo.jpg" alt="FIRE Solutions Logo" className="h-6 w-6 rounded-full" />
           <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em]">FIRE Solutions</h2>
         </button>
         
@@ -368,8 +365,8 @@ const App: React.FC = () => {
               <p className="text-white text-sm font-medium leading-normal">Help</p>
             </a>
             <button
-              onClick={() => setIsPricingModalOpen(true)}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary-dark transition-colors"
+              onClick={() => setAppState('pricing')}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${appState === 'pricing' ? 'bg-secondary-dark' : 'hover:bg-secondary-dark'}`}
             >
               <span className="material-symbols-outlined text-white">payments</span>
               <p className="text-white text-sm font-medium leading-normal">Pricing</p>

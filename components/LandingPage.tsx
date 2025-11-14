@@ -50,27 +50,49 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
         {/* Main Content */}
         <main className="flex-1">
-          <section className="w-full px-4 md:px-10 lg:px-20 py-20 sm:py-28 text-center">
-            <div className="mx-auto flex max-w-4xl flex-col items-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">Ignite Your Digital Presence</h1>
-              <p className="mt-6 max-w-2xl text-lg md:text-xl text-gray-400">We build high-performance custom web solutions that set your business on fire. From innovative apps to scalable platforms, we turn your vision into a digital masterpiece.</p>
-              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-                <button 
-                  onClick={onStartProject}
-                  className="flex items-center justify-center w-full sm:w-auto h-14 px-10 text-lg font-bold text-white bg-primary rounded-lg hover:bg-orange-600 transition-all transform hover:scale-105 glow-effect"
-                >
-                  Get Started Now
-                </button>
-                <a className="flex items-center justify-center w-full sm:w-auto h-14 px-10 text-lg font-bold text-white bg-white/10 rounded-lg border border-white/20 hover:bg-white/20 transition-colors" href="#">Learn More</a>
+          {/* ⬇️ REPLACED THIS ENTIRE SECTION ⬇️ */}
+          {/* HERO SECTION with VIDEO BACKGROUND */}
+          <section className="relative w-full overflow-hidden"> 
+            
+            {/* Video Background */}
+            <div className="absolute inset-0 w-full h-full">
+              <video
+                src="/landing_video.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              {/* Dark overlay for text readability */}
+              <div className="absolute inset-0 bg-black/60" />
+            </div>
+            
+            {/* Text Content (z-10 to be on top) */}
+            {/* Added original padding here */}
+            <div className="relative z-10 w-full px-4 md:px-10 lg:px-20 py-20 sm:py-28 text-center">
+              <div className="mx-auto flex max-w-4xl flex-col items-center">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">Ignite Your Digital Presence</h1>
+                <p className="mt-6 max-w-2xl text-lg md:text-xl text-gray-400">We build high-performance custom web solutions that set your business on fire. From innovative apps to scalable platforms, we turn your vision into a digital masterpiece.</p>
+                <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+                  <button 
+                    onClick={onStartProject}
+                    className="flex items-center justify-center w-full sm:w-auto h-14 px-10 text-lg font-bold text-white bg-primary rounded-lg hover:bg-orange-600 transition-all transform hover:scale-105 glow-effect"
+                  >
+                    Get Started Now
+                  </button>
+                  <a className="flex items-center justify-center w-full sm:w-auto h-14 px-10 text-lg font-bold text-white bg-white/10 rounded-lg border border-white/20 hover:bg-white/20 transition-colors" href="#">Learn More</a>
+                </div>
               </div>
             </div>
-          </section>
-
-          <div class="px-4 md:px-10 lg:px-20 my-8">
-            <div class="mx-auto max-w-7xl">
-                <div class="fire-border"></div>
+            
+            {/* Animated border at the bottom */}
+    
+            <div className="absolute bottom-0 left-0 w-full z-10">
+              <div className="fire-border" />
             </div>
-          </div>
+          </section>
+          {/* ⬆️ END OF REPLACED SECTION ⬆️ */}
 
           <section className="w-full px-4 md:px-10 lg:px-20 py-16 sm:py-24">
             <div className="mx-auto max-w-7xl">
