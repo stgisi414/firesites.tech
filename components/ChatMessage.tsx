@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Message } from '../types';
-import { BotIcon, UserIcon, Volume2Icon, VolumeXIcon, LoaderIcon, LinkIcon } from './icons';
+import { Volume2Icon, VolumeXIcon, LoaderIcon, LinkIcon } from './icons';
 import { GoogleGenAI, Modality } from '@google/genai';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -91,7 +91,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming }
                 responseModalities: [Modality.AUDIO],
                 speechConfig: {
                     voiceConfig: {
-                        prebuiltVoiceConfig: { voiceName: 'Puck' }, // Using a stable voice
+                        prebuiltVoiceConfig: { voiceName: 'Algenib' }, // Using a stable voice
                     },
                 },
             },
@@ -160,65 +160,97 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming }
   }
 
   const hasSources = groundingMetadata && groundingMetadata.groundingChunks.length > 0;
-  
-  return (
-    <div className="max-w-3xl mx-auto">
-      <div className={`flex items-start gap-4 ${isBot ? '' : 'flex-row-reverse'}`}>
-        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isBot ? 'bg-brand-primary' : 'bg-gray-600'}`}>
-          {isBot ? <BotIcon className="w-5 h-5 text-white" /> : <UserIcon className="w-5 h-5 text-white" />}
-        </div>
-        
-        <div className={`px-4 py-3 rounded-lg max-w-[85%] md:max-w-[75%] ${isBot ? 'bg-gray-800' : 'bg-brand-secondary'}`}>
-            {isBot ? (
-                 isStreaming && !text ? (
-                    <div className="flex items-center text-gray-400">
-                        <LoaderIcon className="w-5 h-5 mr-2 animate-spin" />
-                        <span>Sparky is thinking...</span>
-                    </div>
-                 ) : (
-                    <div className="prose prose-invert prose-sm max-w-none">
-                       <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                          {text}
-                       </ReactMarkdown>
-                       {isStreaming && <span className="inline-block w-2 h-4 bg-brand-highlight animate-pulse ml-1" />}
-                    </div>
-                 )
-            ) : (
-                <p className="whitespace-pre-wrap">{text}</p>
-            )}
 
-          {isBot && !isStreaming && text && (
-             <div className="mt-2 pt-2 border-t border-gray-700/50">
-                <button
-                    onClick={handleSpeak}
-                    disabled={isSpeakingLoading}
-                    className="text-gray-400 hover:text-brand-highlight disabled:text-gray-600 disabled:cursor-wait transition-colors focus:outline-none focus:ring-2 focus:ring-brand-highlight rounded-full p-1"
-                    aria-label={isPlaying ? "Stop reading aloud" : "Read message aloud"}
-                >
-                    {isSpeakingLoading ? <LoaderIcon className="w-5 h-5 animate-spin" /> : (
-                        isPlaying ? <VolumeXIcon className="w-5 h-5" /> : <Volume2Icon className="w-5 h-5" />
-                    )}
-                </button>
-            </div>
-          )}
+  // This is the "thinking" bubble
+  if (isBot && isStreaming && !text) {
+    return (
+      <div className="flex items-end gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ai-bubble-dark">
+          <span className="material-symbols-outlined text-primary" style={{fontVariationSettings: "'FILL' 1"}}>robot_2</span>
+        </div>
+        <div className="flex flex-col gap-1 items-start">
+          <div className="flex items-baseline gap-2">
+            <p className="text-text-light text-[13px] font-bold leading-normal">Sparky</p>
+          </div>
+          <div className="flex max-w-xl items-center gap-2 rounded-lg px-4 py-3 bg-ai-bubble-dark text-text-light">
+            <div className="w-2 h-2 rounded-full bg-text-subtle-dark animate-pulse"></div>
+            <div className="w-2 h-2 rounded-full bg-text-subtle-dark animate-pulse [animation-delay:0.2s]"></div>
+            <div className="w-2 h-2 rounded-full bg-text-subtle-dark animate-pulse [animation-delay:0.4s]"></div>
+          </div>
         </div>
       </div>
-      
-      {isBot && !isStreaming && hasSources && (
-        <div className="pl-12 mt-2">
-            <h4 className="text-xs font-bold text-gray-500 uppercase mb-1">Sources</h4>
-            <ul className="flex flex-wrap gap-2">
-                {groundingMetadata.groundingChunks.map((chunk, index) => 
-                    chunk.web ? (
-                        <li key={index}>
-                            <a href={chunk.web.uri} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-gray-400 bg-gray-800 hover:bg-gray-700 hover:text-brand-highlight transition-colors rounded-full px-2 py-1 border border-gray-700">
-                               <LinkIcon className="w-3 h-3 flex-shrink-0" />
-                               <span className="truncate max-w-[200px]">{chunk.web.title || chunk.web.uri}</span>
-                            </a>
-                        </li>
-                    ) : null
-                )}
-            </ul>
+    );
+  }
+  
+  // This is the main message component
+  return (
+    <div className={`flex items-end gap-3 ${!isBot ? 'justify-end' : ''}`}>
+      {/* Avatar (Bot) */}
+      {isBot && (
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ai-bubble-dark">
+          <span className="material-symbols-outlined text-primary" style={{fontVariationSettings: "'FILL' 1"}}>robot_2</span>
+        </div>
+      )}
+
+      {/* Message Bubble & Content */}
+      <div className={`flex flex-col gap-1 ${!isBot ? 'items-end' : 'items-start'}`}>
+        <div className="flex items-baseline gap-2">
+          <p className="text-text-light text-[13px] font-bold leading-normal">{isBot ? 'Sparky' : 'You'}</p>
+          {/* <p className="text-text-subtle-dark text-xs">9:41 AM</p> */}
+        </div>
+        
+        <div className={`max-w-xl rounded-lg px-4 py-3 ${isBot ? 'bg-ai-bubble-dark text-text-light' : 'bg-gradient-to-r from-accent-orange to-accent-yellow text-black'}`}>
+          <div className="prose prose-invert prose-sm max-w-none text-inherit">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                ...markdownComponents,
+                // Override default prose styles for links to match bubble color
+                a: ({node, ...props}: any) => <a className="text-inherit font-bold hover:underline" {...props} />,
+                p: ({node, ...props}: any) => <p className="text-inherit" {...props} />,
+              }}
+            >
+              {text}
+            </ReactMarkdown>
+            {isBot && isStreaming && <span className="inline-block w-2 h-4 bg-primary animate-pulse ml-1" />}
+          </div>
+        </div>
+
+        {/* TTS and Sources (Only for Bot) */}
+        {isBot && !isStreaming && (text || hasSources) && (
+          <div className="flex items-center gap-2 mt-2">
+            {text && (
+              <button
+                  onClick={handleSpeak}
+                  disabled={isSpeakingLoading}
+                  className="text-text-subtle-dark hover:text-accent-orange disabled:text-gray-600 disabled:cursor-wait transition-colors focus:outline-none focus:ring-2 focus:ring-accent-orange rounded-full p-1"
+                  aria-label={isPlaying ? "Stop reading aloud" : "Read message aloud"}
+              >
+                  {isSpeakingLoading ? <LoaderIcon className="w-5 h-5 animate-spin" /> : (
+                      isPlaying ? <VolumeXIcon className="w-5 h-5" /> : <Volume2Icon className="w-5 h-5" />
+                  )}
+              </button>
+            )}
+            {hasSources && (
+              <div className="flex flex-wrap gap-2">
+                  {groundingMetadata.groundingChunks.map((chunk, index) => 
+                      chunk.web ? (
+                          <a key={index} href={chunk.web.uri} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-text-subtle-dark bg-ai-bubble-dark hover:bg-secondary-dark hover:text-accent-orange transition-colors rounded-full px-2 py-1 border border-secondary-dark">
+                             <LinkIcon className="w-3 h-3 flex-shrink-0" />
+                             <span className="truncate max-w-[200px]">{chunk.web.title || chunk.web.uri}</span>
+                          </a>
+                      ) : null
+                  )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Avatar (User) */}
+      {!isBot && (
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary-dark">
+          <span className="material-symbols-outlined text-text-light">person</span>
         </div>
       )}
     </div>

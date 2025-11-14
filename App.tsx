@@ -8,12 +8,16 @@ import { ChatInput } from './components/ChatInput';
 import { LeadForm } from './components/LeadForm';
 import { IntakeForm } from './components/IntakeForm';
 import { Pricing } from './components/Pricing';
+import { Calculators } from './components/Calculators';
+import { LandingPage } from './components/LandingPage';
+import { Services } from './components/Services';
+import { CaseStudies } from './components/CaseStudies';
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [appState, setAppState] = useState<AppState>('loading');
   const [isLoading, setIsLoading] = useState(false);
-  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  // const [isPricingModalOpen, setIsPricingModalOpen] = useState(false); // 👈 REMOVED
   const chatRef = useRef<Chat | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -99,13 +103,10 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('intakeData');
-    if (savedData) {
-      startChatSession(JSON.parse(savedData));
-    } else {
-      setAppState('intake');
-    }
-  }, [startChatSession]);
+    // Always start on the landing page.
+    // The user can then choose to go to chat or start a new project.
+    setAppState('landing');
+  }, []); // Empty dependency array ensures this runs only once on mount
   
   useEffect(() => {
     // Persist chat history to local storage whenever it changes
@@ -194,76 +195,223 @@ const App: React.FC = () => {
     startChatSession(data);
   };
   
+  const handleNewChat = () => {
+    // Clear history and start a new session
+    localStorage.removeItem('chatHistory');
+    localStorage.removeItem('intakeData'); // This will force the intake form
+    setMessages([]);
+    setAppState('loading'); // Go to loading
+    window.location.reload(); // Easiest way to reset
+  };
+
+  const handleGoToChat = () => {
+    const savedData = localStorage.getItem('intakeData');
+    if (savedData) {
+      startChatSession(JSON.parse(savedData));
+    } else {
+      // If for some reason data is gone, go to intake
+      setAppState('intake');
+    }
+  };
+
   if (appState === 'loading') {
     return (
-      <div className="bg-brand-bg flex h-screen items-center justify-center">
+      <div className="bg-background-dark flex h-screen items-center justify-center">
         <p className="text-brand-text">Initializing...</p>
       </div>
     );
   }
 
+  // 1. RENDER LANDING PAGE
+  if (appState === 'landing') {
+    const hasExistingChat = !!localStorage.getItem('intakeData');
+    return (
+      <LandingPage 
+        onStartProject={() => setAppState('intake')}
+        hasExistingChat={hasExistingChat}
+        onGoToChat={handleGoToChat}
+        onGoToServices={() => setAppState('services')}
+        onGoToPricing={() => setAppState('pricing')}
+        onGoToCaseStudies={() => setAppState('caseStudies')}
+      />
+    );
+  }
+
+  if (appState === 'services') {
+    return (
+      <Services 
+        onStartProject={() => setAppState('intake')}
+        onLogoClick={() => setAppState('landing')}
+        onGoToPricing={() => setAppState('pricing')}
+        onGoToCaseStudies={() => setAppState('caseStudies')}
+      />
+    );
+  }
+
+  if (appState === 'pricing') {
+    return (
+      <Pricing
+        onStartProject={() => setAppState('intake')}
+        onLogoClick={() => setAppState('landing')}
+        onGoToServices={() => setAppState('services')}
+        onGoToCaseStudies={() => setAppState('caseStudies')}
+      />
+    );
+  }
+
+  if (appState === 'caseStudies') {
+      return (
+        <CaseStudies
+          onStartProject={() => setAppState('intake')}
+          onLogoClick={() => setAppState('landing')}
+          onGoToServices={() => setAppState('services')}
+          onGoToPricing={() => setAppState('pricing')}
+        />
+      );
+    }
+
+  // 2. RENDER INTAKE FORM
   if (appState === 'intake') {
     return (
-      <div className="bg-brand-bg text-brand-text font-body flex flex-col h-screen">
-        <Header />
-        <main className="flex-1 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="w-full max-w-lg">
+      <div className="bg-background-dark text-brand-text font-display flex flex-col h-screen">
+        {/* Pass the click handler to the header */}
+        <Header onLogoClick={() => setAppState('landing')} />
+        
+        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
+          <div className="w-full max-w-3xl mx-auto">
             <IntakeForm onSubmit={handleIntakeSubmit} />
           </div>
         </main>
-        <footer className="p-4 border-t border-gray-700 bg-brand-bg">
-            <div className="max-w-3xl mx-auto text-center">
-                <button
-                    onClick={() => setIsPricingModalOpen(true)}
-                    className="text-sm text-gray-400 hover:text-brand-primary transition-colors focus:outline-none"
-                    aria-label="View our pricing"
-                >
-                    View Pricing
-                </button>
-            </div>
+        <footer className="text-center p-4 mt-8 border-t border-white/10 bg-background-dark">
+            <p className="text-sm text-gray-500">
+                We'll review your submission and get back to you within 2 business days. 
+                <a className="text-primary hover:underline" href="#"> Privacy Policy</a>.
+            </p>
         </footer>
-        <Pricing isOpen={isPricingModalOpen} onClose={() => setIsPricingModalOpen(false)} />
       </div>
     );
   }
 
+  // 3. RENDER MAIN APP (Chat, Calculators, etc.)
+  
+  // Determine if we are in any "chat" related view
+  const isChatView = ['chatting', 'qualifying', 'qualified'].includes(appState);
+
   return (
-    <div className="bg-brand-bg text-brand-text font-body flex flex-col h-screen">
-      <Header />
-      <main ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
-        {messages.map((msg, index) => (
-          <ChatMessage 
-            key={index} 
-            message={msg} 
-            isStreaming={isLoading && index === messages.length - 1 && msg.role === 'model'}
-          />
-        ))}
-         {isLoading && messages[messages.length - 1]?.role === 'user' && (
-            <ChatMessage 
-                message={{role: 'model', parts: [{text: ''}]}} 
-                isStreaming={true}
-            />
-        )}
-      </main>
-      <footer className="p-4 border-t border-gray-700 bg-brand-bg">
-        <div className="max-w-3xl mx-auto">
-          {appState === 'chatting' && <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />}
-          {appState === 'qualifying' && <LeadForm onSubmit={handleLeadSubmit} />}
-          {appState === 'qualified' && (
-            <p className="text-center text-green-400 font-medium">Thank you for your submission. We'll be in touch soon.</p>
-          )}
-          <div className="text-center mt-4">
+    <div className="flex h-screen w-full bg-background-dark font-display text-text-light">
+      {/* Side Navigation Bar */}
+      <aside className="flex w-64 flex-col bg-background-dark border-r border-secondary-dark/50 p-4">
+        
+        {/* Make the logo a button to go to landing page */}
+        <button onClick={() => setAppState('landing')} className="flex items-center gap-4 text-white">
+          <div className="text-primary text-2xl">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z" fill="currentColor"></path>
+            </svg>
+          </div>
+          <h2 className="text-white text-xl font-bold leading-tight tracking-[-0.015em]">FIRE Solutions</h2>
+        </button>
+        
+        <nav className="flex flex-col gap-2 mt-8">
+          <a className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary-dark transition-colors" href="#">
+            <span className="material-symbols-outlined text-white">dashboard</span>
+            <p className="text-white text-sm font-medium leading-normal">Dashboard</p>
+          </a>
+          
+          <button 
+            onClick={() => setAppState('chatting')}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isChatView ? 'bg-secondary-dark' : 'hover:bg-secondary-dark'}`}
+          >
+            <span className="material-symbols-outlined text-white" style={{fontVariationSettings: "'FILL' 1"}}>history</span>
+            <p className="text-white text-sm font-medium leading-normal">Chat History</p>
+          </button>
+
+          <button 
+            onClick={() => setAppState('calculators')}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${appState === 'calculators' ? 'bg-secondary-dark' : 'hover:bg-secondary-dark'}`}
+          >
+            <span className="material-symbols-outlined text-white">calculate</span>
+            <p className="text-white text-sm font-medium leading-normal">Calculators</p>
+          </button>
+
+          <button 
+            onClick={() => setAppState('services')}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${appState === 'services' ? 'bg-secondary-dark' : 'hover:bg-secondary-dark'}`}
+          >
+            <span className="material-symbols-outlined text-white">layers</span>
+            <p className="text-white text-sm font-medium leading-normal">Our Process</p>
+          </button>
+
+          <button 
+            onClick={() => setAppState('caseStudies')}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${appState === 'caseStudies' ? 'bg-secondary-dark' : 'hover:bg-secondary-dark'}`}
+          >
+            <span className="material-symbols-outlined text-white">auto_stories</span>
+            <p className="text-white text-sm font-medium leading-normal">Case Studies</p>
+          </button>
+          
+          <a className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary-dark transition-colors" href="#">
+            <span className="material-symbols-outlined text-white">settings</span>
+            <p className="text-white text-sm font-medium leading-normal">Settings</p>
+          </a>
+        </nav>
+
+        <div className="mt-auto flex flex-col gap-4">
+          <button 
+            onClick={handleNewChat}
+            className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gradient-to-r from-accent-orange to-accent-yellow text-black text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+            <span className="truncate">New Chat</span>
+          </button>
+          <div className="flex flex-col gap-1">
+            <a className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary-dark transition-colors" href="#">
+              <span className="material-symbols-outlined text-white">help</span>
+              <p className="text-white text-sm font-medium leading-normal">Help</p>
+            </a>
             <button
               onClick={() => setIsPricingModalOpen(true)}
-              className="text-sm text-gray-400 hover:text-brand-primary transition-colors focus:outline-none"
-              aria-label="View our pricing"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary-dark transition-colors"
             >
-              View Pricing
+              <span className="material-symbols-outlined text-white">payments</span>
+              <p className="text-white text-sm font-medium leading-normal">Pricing</p>
             </button>
           </div>
         </div>
-      </footer>
-      <Pricing isOpen={isPricingModalOpen} onClose={() => setIsPricingModalOpen(false)} />
+      </aside>
+
+      {/* Main Content Area */}
+      {appState === 'calculators' ? (
+        <Calculators />
+      ) : (
+        <main className="flex flex-1 flex-col">
+          <div ref={chatContainerRef} className="flex flex-1 flex-col overflow-y-auto p-6">
+            {/* Chat Messages */}
+            <div className="flex flex-col gap-6">
+              {messages.map((msg, index) => (
+                <ChatMessage 
+                  key={index} 
+                  message={msg} 
+                  isStreaming={isLoading && index === messages.length - 1 && msg.role === 'model'}
+                />
+              ))}
+              {isLoading && messages[messages.length - 1]?.role === 'user' && (
+                  <ChatMessage 
+                      message={{role: 'model', parts: [{text: ''}]}} 
+                      isStreaming={true}
+                  />
+              )}
+            </div>
+          </div>
+
+          {/* Chat Input Bar */}
+          <div className="px-6 pb-6 mt-4">
+            {appState === 'chatting' && <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} onNewChat={handleNewChat} />}
+            {appState === 'qualifying' && <LeadForm onSubmit={handleLeadSubmit} />}
+            {appState === 'qualified' && (
+              <p className="text-center text-green-400 font-medium">Thank you for your submission. We'll be in touch soon.</p>
+            )}
+          </div>
+        </main>
+      )}
     </div>
   );
 };

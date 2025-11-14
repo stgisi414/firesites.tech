@@ -37,4 +37,4 @@ export interface IntakeData {
   budget: string;
 }
 
-export type AppState = 'loading' | 'intake' | 'chatting' | 'qualifying' | 'qualified';
+export type AppState = 'loading' | 'landing' | 'intake' | 'chatting' | 'qualifying' | 'qualified' | 'calculators' | 'services' | 'pricing' | 'caseStudies';

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { SendIcon } from './icons';
 
 interface ChatInputProps {
   onSendMessage: (text: string) => void;
   isLoading: boolean;
+  onNewChat: () => void;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading, onNewChat }) => {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -24,25 +24,35 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }
     }
   };
 
-
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="relative">
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Type your message..."
+        placeholder="Ask anything about FIRE..."
         rows={1}
-        className="flex-1 bg-gray-800 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-brand-primary focus:outline-none resize-none transition-all duration-200 ease-in-out"
+        className="w-full resize-none rounded-lg bg-secondary-dark text-text-light placeholder:text-text-subtle-dark border-0 focus:ring-2 focus:ring-accent-orange pr-28 p-4"
         disabled={isLoading}
       />
-      <button
-        type="submit"
-        disabled={isLoading || !text.trim()}
-        className="bg-brand-primary text-white p-3 rounded-full hover:bg-orange-600 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400"
-      >
-        <SendIcon className="w-6 h-6" />
-      </button>
+      <div className="absolute bottom-2 right-2 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onNewChat}
+          aria-label="New Chat"
+          className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-ai-bubble-dark transition-colors"
+        >
+          <span className="material-symbols-outlined text-text-light">add</span>
+        </button>
+        <button
+          type="submit"
+          aria-label="Send Message"
+          disabled={isLoading || !text.trim()}
+          className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-r from-accent-orange to-accent-yellow hover:opacity-90 transition-opacity disabled:opacity-50"
+        >
+          <span className="material-symbols-outlined text-black">send</span>
+        </button>
+      </div>
     </form>
   );
 };
