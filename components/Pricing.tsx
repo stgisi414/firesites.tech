@@ -89,7 +89,7 @@ export const Pricing: React.FC<PricingPageProps> = ({ onStartProject, onLogoClic
       <div className="relative z-10 flex h-full grow flex-col">
         <MainHeader
           appState={appState}
-          onLogoClick={onGoToChat} // Or onLogoClick={() => {}} if you want it to do nothing on landing
+          onLogoClick={onLogoClick} // Or onLogoClick={() => {}} if you want it to do nothing on landing
           onGoToServices={onGoToServices}
           onGoToPricing={onGoToPricing}
           onGoToCaseStudies={onGoToCaseStudies}

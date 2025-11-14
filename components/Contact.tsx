@@ -5,11 +5,12 @@ import emailjs from '@emailjs/browser';
 
 interface ContactPageProps {
   appState: AppState;
+  onStartProject: () => void;
   onLogoClick: () => void;
   onGoToServices: () => void;
   onGoToPricing: () => void;
   onGoToCaseStudies: () => void;
-  onGoToAbout: () => void;
+  onGoToContact: () => void;
 }
 
 // Helper for form status
@@ -21,7 +22,9 @@ export const Contact: React.FC<ContactPageProps> = ({
   onGoToServices, 
   onGoToPricing, 
   onGoToCaseStudies, 
-  onGoToAbout 
+  onGoToAbout,
+  onGoToContact,
+  onStartProject
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [formStatus, setFormStatus] = useState<FormStatus>("idle");
@@ -53,7 +56,7 @@ export const Contact: React.FC<ContactPageProps> = ({
     <div className="relative flex min-h-screen w-full flex-col font-display bg-background-dark text-text-dark">
       <MainHeader
           appState={appState}
-          onLogoClick={onGoToChat} // Or onLogoClick={() => {}} if you want it to do nothing on landing
+          onLogoClick={onLogoClick} // Or onLogoClick={() => {}} if you want it to do nothing on landing
           onGoToServices={onGoToServices}
           onGoToPricing={onGoToPricing}
           onGoToCaseStudies={onGoToCaseStudies}

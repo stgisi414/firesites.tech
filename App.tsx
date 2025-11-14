@@ -234,6 +234,7 @@ const App: React.FC = () => {
         onStartProject={() => setAppState('intake')}
         hasExistingChat={hasExistingChat}
         onGoToChat={handleGoToChat}
+        onLogoClick={() => setAppState('landing')}
         onGoToServices={() => setAppState('services')}
         onGoToPricing={() => setAppState('pricing')}
         onGoToCaseStudies={() => setAppState('caseStudies')}
